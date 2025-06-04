@@ -1,0 +1,14 @@
+# Arquivos de ambiente
+.env
+
+# Diretórios de cache
+__pycache__/
+*.pyc
+
+# Diretórios de IDE
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.log
+*.tmp
