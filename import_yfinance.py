@@ -83,16 +83,16 @@ for doc in tqdm(all_docs, desc="Processando tickers", unit="ticker"):
             updated_kelly = [kelly_data]
 
         # Atualizar o documento no MongoDB
-        # collection.update_one(
-        #     {"_id": doc["_id"]},
-        #     {"$set": {"kelly_fraction": updated_kelly}}
-        # )
+        collection.update_one(
+            {"_id": doc["_id"]},
+            {"$set": {"kelly_fraction": updated_kelly}}
+        )
 
         print(f"Kelly fraction salvo no MongoDB para {symbol}")
 
 
     except Exception as e:
-        print(f"\n❌ Erro ao processar {symbol}: {e}")
+        print(f"Erro ao processar {symbol}: {e}")
 
 print("Processamento concluído!")
 
@@ -104,4 +104,4 @@ elapsed_time = end_time - start_time  # segundos
 minutes = int(elapsed_time // 60)
 seconds = int(elapsed_time % 60)
 
-print(f"\n✅ Tempo total:  {minutes:02d}:{seconds:02d} (mm:ss) para processar {total} tickers.")
+print(f"Tempo total:  {minutes:02d}:{seconds:02d} (mm:ss) para processar {total} tickers.")
