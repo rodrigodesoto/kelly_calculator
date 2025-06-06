@@ -83,10 +83,10 @@ for doc in tqdm(all_docs, desc="Processando tickers", unit="ticker"):
             updated_kelly = [kelly_data]
 
         # Atualizar o documento no MongoDB
-        collection.update_one(
-            {"_id": doc["_id"]},
-            {"$set": {"kelly_fraction": updated_kelly}}
-        )
+        # collection.update_one(
+        #     {"_id": doc["_id"]},
+        #     {"$set": {"kelly_fraction": updated_kelly}}
+        # )
 
         print(f"Kelly fraction salvo no MongoDB para {symbol}")
 
