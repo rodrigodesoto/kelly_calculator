@@ -13,9 +13,9 @@ import sys
 hoje = datetime.today().weekday()
 
 # Se for sábado (5) ou domingo (6), sair do programa
-if hoje >= 5:
-    print("Hoje não é dia útil. Encerrando a execução.")
-    sys.exit()
+# if hoje >= 5:
+#     print("Hoje não é dia útil. Encerrando a execução.")
+#     sys.exit()
 
 # Carregar as variáveis do .env
 load_dotenv()
@@ -23,15 +23,18 @@ load_dotenv()
 # Recuperar as variáveis
 MONGO_URI = os.getenv("MONGO_URI")
 MONGO_DB = os.getenv("MONGO_DB")
-MONGO_COLLECTION = os.getenv("MONGO_COLLECTION")
+COLLECTION_ALL_STOCKS = os.getenv("COLLECTION_ALL_STOCKS")
+COLLECTION_KELLY_FRACTION = os.getenv("COLLECTION_KELLY_FRACTION")
+
 
 # Conexão com MongoDB
 client = MongoClient(MONGO_URI)
 db = client[MONGO_DB]
-collection = db[MONGO_COLLECTION]
+collection_all_stocks = db[COLLECTION_ALL_STOCKS]
+collection_kelly_fraction = db[COLLECTION_KELLY_FRACTION]
 
 # Recupera todos os documentos
-all_docs = list(collection.find())
+all_docs = list(collection_all_stocks.find())
 total = len(all_docs)
 
 # Inicia o cronômetro
@@ -79,24 +82,17 @@ for doc in tqdm(all_docs, desc="Processando tickers", unit="ticker"):
 
         print(f"Kelly fraction para {symbol}: {kelly_fraction:.4f}")
 
-        # Estrutura para salvar no MongoDB
-        kelly_data = {
+        # Criar e salvar o documento na collection kelly_fraction
+        kelly_doc = {
             "_id": ObjectId(),
-            "data": pd.Timestamp.now().isoformat(),
+            "symbol": symbol,
+            "data": datetime.now(),
             "%_kelly": round(kelly_fraction, 6)
         }
-        # Se já existe o campo kelly_fraction, adiciona, senão cria
-        if 'kelly_fraction' in doc and isinstance(doc['kelly_fraction'], list):
-            updated_kelly = doc['kelly_fraction']
-            updated_kelly.append(kelly_data)
-        else:
-            updated_kelly = [kelly_data]
 
         # Atualizar o documento no MongoDB
-        collection.update_one(
-            {"_id": doc["_id"]},
-            {"$set": {"kelly_fraction": updated_kelly}}
-        )
+        collection_kelly_fraction.insert_one(kelly_doc)
+        print(f"Salvo na collection kelly_fraction: {symbol}")
 
         print(f"Kelly fraction salvo no MongoDB para {symbol}")
 
