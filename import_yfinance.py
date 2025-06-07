@@ -6,6 +6,16 @@ import time
 from tqdm import tqdm
 from dotenv import load_dotenv
 import os
+from datetime import datetime
+import sys
+
+# Obter o dia da semana atual (0 = segunda, 6 = domingo)
+hoje = datetime.today().weekday()
+
+# Se for sábado (5) ou domingo (6), sair do programa
+if hoje >= 5:
+    print("Hoje não é dia útil. Encerrando a execução.")
+    sys.exit()
 
 # Carregar as variáveis do .env
 load_dotenv()
