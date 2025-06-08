@@ -13,9 +13,9 @@ import sys
 hoje = datetime.today().weekday()
 
 # Se for sábado (5) ou domingo (6), sair do programa
-# if hoje >= 5:
-#     print("Hoje não é dia útil. Encerrando a execução.")
-#     sys.exit()
+if hoje >= 5:
+    print("Hoje não é dia útil. Encerrando a execução.")
+    sys.exit()
 
 # Carregar as variáveis do .env
 load_dotenv()
